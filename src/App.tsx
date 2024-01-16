@@ -5,8 +5,8 @@ import { RouterProvider } from "react-router-dom";
 import { store } from "./store";
 import { router } from "./router";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css"
 
 export const App = () => {
 	return (

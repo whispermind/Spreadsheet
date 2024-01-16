@@ -1,0 +1,7 @@
+tbody > tr, svg {
+  cursor: pointer;
+}
+
+svg:hover {
+  fill: silver;
+}
