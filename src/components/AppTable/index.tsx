@@ -1,7 +1,8 @@
-import { useMemo, useCallback, MouseEvent } from "react";
+import { useMemo, useCallback, MouseEvent, useState } from "react";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { SortAlphaDown, Filter } from "react-bootstrap-icons";
+import { FilteringModal } from "..";
 
 import { useTableContext } from "./TableContext";
 import "./index.css"
@@ -11,10 +12,28 @@ interface IAppTableProps {
   redirect?: string;
 }
 
+interface IModalState {
+  show: boolean;
+  filteringField: string;
+}
+
+const modalDefaultState = {show: false, filteringField: ""};
+
 export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
+  const [modalState, setModalState] = useState<IModalState>(modalDefaultState);
   const navigate = useNavigate();
   const context = useTableContext();
+
+  const handleClose = useCallback(() => setModalState(modalDefaultState), []);
+  const handleShow = useCallback(({ currentTarget }: MouseEvent) => {
+    const filteringField = (currentTarget as HTMLElement).dataset.field!;
+    setModalState({show: true, filteringField })
+  }, []);  
   
+  const handleConfirm = useCallback((filteringSubject: string) => {
+    context.setContext({...context, filteringSubject, filteringField: modalState.filteringField })
+  }, [context, modalState.filteringField]);
+
   const sortByField = useCallback(({ currentTarget }: MouseEvent) => {
     const field = (currentTarget as HTMLElement).dataset.field!;
     const { setContext, sortingBy, sortingOrd } = context;
@@ -33,8 +52,8 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
 
   const headings = useMemo(
     () => tableData?.length && Object.keys(tableData[0])
-      .map((heading, index) => <th key={index}>{heading}<div className="table-controls"><button data-field={heading}><Filter /></button><button onClick={sortByField} data-field={heading} ><SortAlphaDown /></button></div></th>),
-    [tableData, sortByField]);
+      .map((heading, index) => <th key={index}>{heading}<div className="table-controls"><button onClick={handleShow} data-field={heading}><Filter /></button><button onClick={sortByField} data-field={heading} ><SortAlphaDown /></button></div></th>),
+    [tableData, sortByField, handleShow]);
 
   const rows = useMemo(() => tableData?.map((rowData) => {
     const values = Object.values(rowData).map((cellData, index) => <td key={index}>{cellData}</td>);
@@ -48,7 +67,6 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
     return <tr onClick={clickHandler} key={rowData.id}>{values}</tr>
   }), [context, tableData, navigate, redirect])
   
-
   return (
     <>
       <Table striped bordered hover responsive className="app-table">
@@ -61,6 +79,7 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
           {rows}
         </tbody>
       </Table>
+      <FilteringModal handleClose={handleClose} handleConfirm={handleConfirm} show={modalState.show} />
     </>
   )
 }
