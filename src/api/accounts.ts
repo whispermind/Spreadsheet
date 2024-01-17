@@ -17,9 +17,9 @@ const accountsApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["accounts"]
 		}),
-		getAccounts: builder.query<{apiResponse: IAccount[], totalCount: number}, Partial<IPagination>>({
-			query: ({page, perPage}) => ({
-				url: `/accounts?_page=${page}&_per_page=${perPage}`
+		getAccounts: builder.query<{apiResponse: IAccount[], totalCount: number}, Partial<IDataRequestOptions>>({
+			query: ({page, perPage, sortingOrd, sortingBy, filteringSubject, filteringField}) => ({
+				url: `/accounts?_page=${page}&_per_page=${perPage}&_sort=${sortingBy}&_order=${sortingOrd}&${filteringField}=${filteringSubject}`
 			}),
 			transformResponse(apiResponse: IAccount[], meta) {
         return { apiResponse, totalCount: Number(meta?.response?.headers.get('X-Total-Count')) }

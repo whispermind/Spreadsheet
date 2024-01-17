@@ -1,0 +1,15 @@
+.app-table {
+  margin-top: 20px;
+}
+
+.table-controls {
+  float: right;
+}
+
+.table-controls > button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  margin-left: 10px;
+}
