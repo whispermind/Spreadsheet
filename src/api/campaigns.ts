@@ -9,12 +9,15 @@ interface ICampaign {
 
 const campaignsApi = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
-		getCampaigns: builder.query<ICampaign[], Partial<IDataRequestOptions> & {id: string}>({
-			query: ({page, perPage, id}) => ({
-				url: `/campaign?_page=${page}&per_page=${perPage}&id=${id}`
+		getCampaigns: builder.query<{ apiResponse: ICampaign[], totalCount: number }, Partial<IDataRequestOptions> & {profileId: string}>({
+			query: ({page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject, profileId}) => ({
+				url: `/campaigns?_page=${page}&_per_page=${perPage}&_sort=${sortingBy}&_order=${sortingOrd}&id=${profileId}&${filteringSubject && filteringField || ""}=${filteringSubject}`
 			}),
+			transformResponse(apiResponse: ICampaign[], meta) {
+				return { apiResponse, totalCount: Number(meta?.response?.headers.get('X-Total-Count')) }
+			},
 			providesTags: ["campaigns"],
-		}),
+		})
 })});
 
 export const {

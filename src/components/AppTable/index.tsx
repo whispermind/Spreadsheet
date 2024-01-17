@@ -23,6 +23,7 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
   const [modalState, setModalState] = useState<IModalState>(modalDefaultState);
   const navigate = useNavigate();
   const context = useTableContext();
+  
 
   const handleClose = useCallback(() => setModalState(modalDefaultState), []);
   const handleShow = useCallback(({ currentTarget }: MouseEvent) => {
@@ -65,8 +66,8 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
     }
 
     return <tr onClick={clickHandler} key={rowData.id}>{values}</tr>
-  }), [context, tableData, navigate, redirect])
-  
+  }), [context, tableData, navigate, redirect]);
+
   return (
     <>
       <Table striped bordered hover responsive className="app-table">

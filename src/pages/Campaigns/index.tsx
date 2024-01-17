@@ -1,22 +1,25 @@
-import { useGetAccountsQuery } from "../../api/accounts"
+
+import { useParams } from "react-router-dom";
+
+import { useGetCampaignsQuery } from "../../api/campaigns";
 import { PaginationBar, AppTable } from "../../components";
 import { useTableContext } from "../../components/AppTable/TableContext";
 
-export const AccountsPage = () => {
+export const CampaignsPage = () => {
+  const { profileId } = useParams();
   const { page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject } = useTableContext();
-  const { data, isSuccess } = useGetAccountsQuery({page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject});
+  const { data, isSuccess } = useGetCampaignsQuery({page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject, profileId: profileId! });
   const tableData = data?.apiResponse;
-  console.log(tableData)
   const isData = isSuccess && tableData?.length;
   const totalPages = Math.ceil((data?.totalCount || 0) / perPage)
 
   return (
     <>
-      <h2>Accounts</h2>
+      <h2>Campaigns</h2>
       {
       isData ?
         <>
-          <AppTable redirect="profiles" tableData={tableData}  />
+          <AppTable tableData={tableData}  />
           <PaginationBar totalPages={totalPages} />
         </> : isSuccess && <h2>There is no data for current request</h2>
       }
