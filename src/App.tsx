@@ -1,11 +1,10 @@
 import { useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { Outlet } from "react-router-dom";
-import { RouterProvider } from "react-router-dom";
 
 import { store } from "./store";
-import { router } from "./router";
 import { ITableContext, TableContext, defaultTableContextValue } from "./components/AppTable/TableContext";
+import { Header } from "./components";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css"
@@ -17,11 +16,13 @@ export const App = () => {
 	const setContext = useCallback((context: ITableContext) => setTableContext(context), []); 
 
 	return (
+		<>
+		<Header />
 		<Provider store={store}>
 			<TableContext.Provider value={{ ...tableContext, setContext, setDefault}}>
-				<RouterProvider router={router} />
-				<Outlet />
+					<Outlet />
 			</TableContext.Provider>
 		</Provider>
+		</>
 	);
 };

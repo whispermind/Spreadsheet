@@ -1,8 +1,10 @@
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 
-import ReactDOM from 'react-dom/client'
-import { App } from './App.tsx'
+import { router } from './router/index.tsx';
+import { AppSpinner } from './components';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <App />
+    <RouterProvider router={router} fallbackElement={<AppSpinner />} />
 )
 

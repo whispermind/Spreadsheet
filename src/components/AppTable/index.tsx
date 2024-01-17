@@ -1,7 +1,7 @@
 import { useMemo, useCallback, MouseEvent, useState } from "react";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { SortAlphaDown, Filter } from "react-bootstrap-icons";
+import { SortAlphaDown, Filter, X } from "react-bootstrap-icons";
 import { FilteringModal } from "..";
 
 import { useTableContext } from "./TableContext";
@@ -35,6 +35,10 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
     context.setContext({...context, filteringSubject, filteringField: modalState.filteringField })
   }, [context, modalState.filteringField]);
 
+  const cleanFiltering = useCallback(() => {
+    context.setContext({...context, filteringField: "", filteringSubject: ""})
+  }, [context]);
+
   const sortByField = useCallback(({ currentTarget }: MouseEvent) => {
     const field = (currentTarget as HTMLElement).dataset.field!;
     const { setContext, sortingBy, sortingOrd } = context;
@@ -53,7 +57,15 @@ export const AppTable = ({ tableData, redirect }: IAppTableProps) => {
 
   const headings = useMemo(
     () => tableData?.length && Object.keys(tableData[0])
-      .map((heading, index) => <th key={index}>{heading}<div className="table-controls"><button onClick={handleShow} data-field={heading}><Filter /></button><button onClick={sortByField} data-field={heading} ><SortAlphaDown /></button></div></th>),
+      .map((heading, index) => 
+      <th key={index}>
+        {heading}
+        <div className="table-controls">
+          <button title="Filtering" onClick={handleShow} data-field={heading}><Filter /></button>
+          <button title="Clean filtering" onClick={cleanFiltering}><X /></button>
+          <button title="Sorting" onClick={sortByField} data-field={heading} ><SortAlphaDown /></button>
+        </div>
+      </th>),
     [tableData, sortByField, handleShow]);
 
   const rows = useMemo(() => tableData?.map((rowData) => {

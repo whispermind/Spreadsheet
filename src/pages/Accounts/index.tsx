@@ -6,7 +6,6 @@ export const AccountsPage = () => {
   const { page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject } = useTableContext();
   const { data, isSuccess } = useGetAccountsQuery({page, perPage, sortingBy, sortingOrd, filteringField, filteringSubject});
   const tableData = data?.apiResponse;
-  console.log(tableData)
   const isData = isSuccess && tableData?.length;
   const totalPages = Math.ceil((data?.totalCount || 0) / perPage)
 

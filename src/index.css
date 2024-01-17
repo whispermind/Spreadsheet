@@ -5,3 +5,7 @@ tbody > tr, svg {
 svg:hover {
   fill: silver;
 }
+
+h2 {
+  margin: 10px auto;
+}
